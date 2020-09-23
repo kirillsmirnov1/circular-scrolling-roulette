@@ -1,0 +1,14 @@
+{
+  "name": "trulden.me.t.circularscrollingroulette",
+  "version": "1.0.0",
+  "displayName": "Circular Scrolling Roulette",
+  "author": {
+    "name": "Kirill Smirnov",
+    "email": "thegaldren@gmail.com",
+    "url": "https://github.com/kirillsmirnov1"
+  },
+  "dependencies": {
+    "com.unity.textmeshpro": "2.1.1"
+  },
+  "type": "library"
+}
