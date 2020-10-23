@@ -513,7 +513,7 @@ namespace CircularScrollingRoulette.Roulette
 		/// <summary>
 		/// Move the roulette for the distance of times of unit position
 		/// </summary>
-		protected void SetUnitMove(int unit)
+		protected virtual void SetUnitMove(int unit)
 		{
 			Vector2 deltaPos = UnitPosL * unit;
 
