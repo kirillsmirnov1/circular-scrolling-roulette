@@ -40,10 +40,8 @@ namespace CircularScrollingRoulette.Entry
 		private Vector2 _changeSideUpperBoundPos;
 		private float _cosValueAdjust;
 
-		private Vector3 _slidingDistance;   // The sliding distance for each frame
-		private Vector3 _slidingDistanceLeft;
-
 		private Vector3 _initialLocalScale;
+		public float angleRad;
 
 		/// <summary>
 		/// Get the content ID of the entry
@@ -142,6 +140,10 @@ namespace CircularScrollingRoulette.Entry
 							0.0f, 0.0f);
 						UpdateYPosition();
 						break;
+					case Roulette.Roulette.Direction.Radial:
+						angleRad = rouletteEntryId * _positionControl.anglePerEntry;
+						UpdateAngularPosition();
+						break;
 				}
 			} else {
 				switch (_positionControl.direction) {
@@ -157,10 +159,15 @@ namespace CircularScrollingRoulette.Entry
 							0.0f, 0.0f);
 						UpdateYPosition();
 						break;
+					case Roulette.Roulette.Direction.Radial:
+						var anglePerEntry = Mathf.PI * 2f / _positionControl.rouletteEntries.Length;
+						angleRad = rouletteEntryId * anglePerEntry;
+						UpdateAngularPosition();
+						break;
 				}
 			}
 		}
-	
+
 		/// <summary>
 		/// Update the local position of RouletteEntry according to the delta position at each frame.
 		/// Note that the deltaPosition must be in local space. 
@@ -178,7 +185,19 @@ namespace CircularScrollingRoulette.Entry
 					CheckBoundaryX();
 					UpdateYPosition();
 					break;
+				case Roulette.Roulette.Direction.Radial:
+					angleRad += deltaPositionL.y;
+					angleRad %= 2f * Mathf.PI;
+					UpdateAngularPosition();
+					break;
 			}
+		}
+
+		private void UpdateAngularPosition()
+		{
+			transform.localPosition = new Vector2(
+				_positionControl.radius * Mathf.Cos(angleRad),
+				_positionControl.radius * Mathf.Sin(angleRad));
 		}
 	
 		/// <summary>

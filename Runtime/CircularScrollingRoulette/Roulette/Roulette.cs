@@ -40,7 +40,8 @@ namespace CircularScrollingRoulette.Roulette
 		public enum Direction
 		{
 			Vertical,
-			Horizontal
+			Horizontal,
+			Radial,
 		}
 
 		/*========== Settings ==========*/
@@ -144,10 +145,13 @@ namespace CircularScrollingRoulette.Roulette
 		
 #pragma warning disable 0649
 		[Header("Debug")] 
+		[SerializeField] private bool logLogic;
 		[SerializeField] private bool logSlidingDistance;
 #pragma warning restore 0649
 		
 		protected Action OnSlidingFinishedCallback;
+		public float radius = 1f;
+		public float anglePerEntry;
 
 		/// <summary>
 		/// Notice: RouletteEntry will initialize its variables from here, so Roulette
@@ -170,6 +174,7 @@ namespace CircularScrollingRoulette.Roulette
 
 		private void CheckCenteredContentId()
 		{
+			if(logLogic) Debug.Log("CheckCenteredContentId()");
 			var id = GetCenteredContentId();
 			
 			if (id == centeredContentId) return;
@@ -208,8 +213,11 @@ namespace CircularScrollingRoulette.Roulette
 		 * Assume that the origin of the canvas space is at the center of canvas plane. */
 
 			CanvasMaxPosL = GenerateCanvasMaxPosL();
-
-			UnitPosL = CanvasMaxPosL / entryGapFactor;
+			
+			anglePerEntry = Mathf.PI * 2f / rouletteEntries.Length;
+			
+			UnitPosL = (direction != Direction.Radial) ? (CanvasMaxPosL / entryGapFactor) : anglePerEntry * Vector2.up;
+			
 			LowerBoundPosL = UnitPosL * (-1 * rouletteEntries.Length / 2 - 1);
 			UpperBoundPosL = UnitPosL * (rouletteEntries.Length / 2 + 1);
 
@@ -332,6 +340,7 @@ namespace CircularScrollingRoulette.Roulette
 		void ScrollDeltaHandler(Vector2 mouseScrollDelta)
 		{
 			switch (direction) {
+				case Direction.Radial: 
 				case Direction.Vertical:
 					if (mouseScrollDelta.y > 0)
 						MoveOneUnitUp();
@@ -373,6 +382,7 @@ namespace CircularScrollingRoulette.Roulette
 
 				// Set sliding distance for this frame
 				if (_slidingFramesLeft == 0) {
+					if(logLogic) Debug.Log("_slidingFramesLeft == 0");
 					if (_needToAlignToCenter) {
 						_needToAlignToCenter = false;
 						SetSlidingToCenter();
@@ -471,6 +481,7 @@ namespace CircularScrollingRoulette.Roulette
 		/// </summary>
 		private void SetSlidingToCenter()
 		{
+			if(logLogic) Debug.Log("Sliding to center");
 			_slidingDistanceLeft = FindDeltaPositionToCenter();
 			_slidingFramesLeft = entrySlidingFrames;
 		}
@@ -513,7 +524,16 @@ namespace CircularScrollingRoulette.Roulette
 
 					alignToCenterDistance = new Vector3(minDeltaPos, 0.0f, 0.0f);
 					break;
+				case Direction.Radial:
+					foreach (RouletteEntry rouletteEntry in rouletteEntries)
+					{
+						deltaPos = -rouletteEntry.angleRad;
+						if (Mathf.Abs(deltaPos) < Mathf.Abs(minDeltaPos))
+							minDeltaPos = deltaPos;
+					}
 
+					alignToCenterDistance = new Vector3(minDeltaPos, 0, 0);
+					break;
 				default:
 					alignToCenterDistance = Vector3.zero;
 					break;
@@ -616,6 +636,17 @@ namespace CircularScrollingRoulette.Roulette
 					foreach (RouletteEntry rouletteEntry in rouletteEntries) {
 						position = Mathf.Abs(rouletteEntry.transform.localPosition.x);
 						if (position < minPosition) {
+							minPosition = position;
+							candidateEntry = rouletteEntry;
+						}
+					}
+					break;
+				case Direction.Radial:
+					foreach (var rouletteEntry in rouletteEntries)
+					{
+						position = Mathf.Min(Mathf.Abs(rouletteEntry.angleRad), Mathf.Abs(2 * Mathf.PI - rouletteEntry.angleRad));
+						if (position < minPosition)
+						{
 							minPosition = position;
 							candidateEntry = rouletteEntry;
 						}
