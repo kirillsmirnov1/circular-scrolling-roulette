@@ -21,6 +21,8 @@ namespace CircularScrollingRoulette.Roulette
 	/// </summary>
 	public class Roulette : MonoBehaviour, IControlEventHandler
 	{
+		public event Action<int> OnCenteredContentIdUpdate; 
+		
 		public enum RouletteType
 		{
 			Circular,
@@ -163,7 +165,17 @@ namespace CircularScrollingRoulette.Roulette
 
 		private void InitCallbacks()
 		{
-			OnSlidingFinishedCallback += () => centeredContentId = GetCenteredContentId();
+			OnSlidingFinishedCallback += CheckCenteredContentId;
+		}
+
+		private void CheckCenteredContentId()
+		{
+			var id = GetCenteredContentId();
+			
+			if (id == centeredContentId) return;
+			
+			centeredContentId = id;
+			OnCenteredContentIdUpdate?.Invoke(id);
 		}
 
 		private void InstantiateEntries()
