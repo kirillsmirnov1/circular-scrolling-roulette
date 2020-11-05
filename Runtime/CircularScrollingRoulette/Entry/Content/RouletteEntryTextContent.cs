@@ -18,7 +18,7 @@ namespace CircularScrollingRoulette.Entry.Content
 
         public override void SetContent(object content)
         {
-            _text.text = (string)content;
+            _text.text = content.ToString();
         }
 
         public override object GetContent() => _text.text;
