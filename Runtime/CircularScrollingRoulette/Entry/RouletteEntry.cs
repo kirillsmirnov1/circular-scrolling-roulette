@@ -24,7 +24,7 @@ namespace CircularScrollingRoulette.Entry
 		[HideInInspector]
 		public RouletteEntry nextRouletteEntry;
 
-		private Roulette.Roulette _positionControl;
+		private Roulette.Roulette _roulette;
 		protected RouletteBank _rouletteBank;
 		protected int _contentId;
 
@@ -60,16 +60,16 @@ namespace CircularScrollingRoulette.Entry
 		{
 			_content = GetComponentInChildren<RouletteEntryContent>();
 			if(_content == null) Debug.LogWarning($"{gameObject.name}: couldn't get content");
-			_positionControl = transform.GetComponentInParent<Roulette.Roulette>();
-			_rouletteBank = _positionControl.rouletteBank;
+			_roulette = transform.GetComponentInParent<Roulette.Roulette>();
+			_rouletteBank = _roulette.rouletteBank;
 
-			_maxCurvePos = _positionControl.CanvasMaxPosL * _positionControl.rouletteCurvature;
-			_unitPos = _positionControl.UnitPosL;
-			_lowerBoundPos = _positionControl.LowerBoundPosL;
-			_upperBoundPos = _positionControl.UpperBoundPosL;
+			_maxCurvePos = _roulette.CanvasMaxPosL * _roulette.rouletteCurvature;
+			_unitPos = _roulette.UnitPosL;
+			_lowerBoundPos = _roulette.LowerBoundPosL;
+			_upperBoundPos = _roulette.UpperBoundPosL;
 			_changeSideLowerBoundPos = _lowerBoundPos + _unitPos * 0.3f;
 			_changeSideUpperBoundPos = _upperBoundPos - _unitPos * 0.3f;
-			_cosValueAdjust = _positionControl.positionAdjust;
+			_cosValueAdjust = _roulette.positionAdjust;
 
 			_initialLocalScale = transform.localScale;
 
@@ -84,23 +84,23 @@ namespace CircularScrollingRoulette.Entry
 		public void InitContent()
 		{
 			// Get the content ID of the centered entry
-			_contentId = _positionControl.centeredContentId;
+			_contentId = _roulette.centeredContentId;
 
 			// Adjust the contentID according to its initial order.
-			_contentId += rouletteEntryId - _positionControl.rouletteEntries.Length / 2;
+			_contentId += rouletteEntryId - _roulette.rouletteEntries.Length / 2;
 
 			// In the linear mode, disable the entry if needed
-			if (_positionControl.rouletteType == Roulette.Roulette.RouletteType.Linear) {
+			if (_roulette.rouletteType == Roulette.Roulette.RouletteType.Linear) {
 				// Disable the entries at the upper half of the roulette
 				// which will hold the item at the tail of the contents.
 				if (_contentId < 0) {
-					_positionControl.numOfUpperDisabledEntries += 1;
+					_roulette.numOfUpperDisabledEntries += 1;
 					gameObject.SetActive(false);
 				}
 				// Disable the entry at the lower half of the roulette
 				// which will hold the repeated item.
 				else if (_contentId >= _rouletteBank.GetRouletteLength()) {
-					_positionControl.numOfLowerDisabledEntries += 1;
+					_roulette.numOfLowerDisabledEntries += 1;
 					gameObject.SetActive(false);
 				}
 			}
@@ -127,17 +127,17 @@ namespace CircularScrollingRoulette.Entry
 		void InitialPosition()
 		{
 			// If there are even number of RouletteEntries, adjust the initial position by an half unitPos.
-			if ((_positionControl.rouletteEntries.Length & 0x1) == 0) {
-				switch (_positionControl.direction) {
+			if ((_roulette.rouletteEntries.Length & 0x1) == 0) {
+				switch (_roulette.direction) {
 					case Roulette.Roulette.Direction.Vertical:
 						transform.localPosition = new Vector3(0.0f,
-							_unitPos.y * (rouletteEntryId * -1 + _positionControl.rouletteEntries.Length / 2) - _unitPos.y / 2,
+							_unitPos.y * (rouletteEntryId * -1 + _roulette.rouletteEntries.Length / 2) - _unitPos.y / 2,
 							0.0f);
 						UpdateXPosition();
 						break;
 					case Roulette.Roulette.Direction.Horizontal:
 						transform.localPosition = new Vector3(
-							_unitPos.x * (rouletteEntryId - _positionControl.rouletteEntries.Length / 2) - _unitPos.x / 2,
+							_unitPos.x * (rouletteEntryId - _roulette.rouletteEntries.Length / 2) - _unitPos.x / 2,
 							0.0f, 0.0f);
 						UpdateYPosition();
 						break;
@@ -147,16 +147,16 @@ namespace CircularScrollingRoulette.Entry
 						break;
 				}
 			} else {
-				switch (_positionControl.direction) {
+				switch (_roulette.direction) {
 					case Roulette.Roulette.Direction.Vertical:
 						transform.localPosition = new Vector3(0.0f,
-							_unitPos.y * (rouletteEntryId * -1 + _positionControl.rouletteEntries.Length / 2),
+							_unitPos.y * (rouletteEntryId * -1 + _roulette.rouletteEntries.Length / 2),
 							0.0f);
 						UpdateXPosition();
 						break;
 					case Roulette.Roulette.Direction.Horizontal:
 						transform.localPosition = new Vector3(
-							_unitPos.x * (rouletteEntryId - _positionControl.rouletteEntries.Length / 2),
+							_unitPos.x * (rouletteEntryId - _roulette.rouletteEntries.Length / 2),
 							0.0f, 0.0f);
 						UpdateYPosition();
 						break;
@@ -170,7 +170,7 @@ namespace CircularScrollingRoulette.Entry
 
 		private void InitAngularPos()
 		{
-			radPos = rouletteEntryId * _positionControl.radPerEntry + _positionControl.RadStart;
+			radPos = rouletteEntryId * _roulette.radPerEntry + _roulette.RadStart;
 		}
 
 		/// <summary>
@@ -179,7 +179,7 @@ namespace CircularScrollingRoulette.Entry
 		/// </summary>
 		public void UpdatePosition(Vector3 deltaPositionL)
 		{
-			switch (_positionControl.direction) {
+			switch (_roulette.direction) {
 				case Roulette.Roulette.Direction.Vertical:
 					transform.localPosition += new Vector3(0.0f, deltaPositionL.y, 0.0f);
 					CheckBoundaryY();
@@ -201,8 +201,8 @@ namespace CircularScrollingRoulette.Entry
 		private void UpdateAngularPosition()
 		{
 			transform.localPosition = new Vector2(
-				_positionControl.radius * Mathf.Cos(radPos),
-				_positionControl.radius * Mathf.Sin(radPos));
+				_roulette.radius * Mathf.Cos(radPos),
+				_roulette.radius * Mathf.Sin(radPos));
 		}
 	
 		/// <summary>
@@ -287,7 +287,7 @@ namespace CircularScrollingRoulette.Entry
 		/// </summary>
 		private void CheckAnchor()
 		{
-			_positionControl.CheckAnchor(rouletteEntryId, transform.localPosition.y);
+			_roulette.CheckAnchor(rouletteEntryId, transform.localPosition.y);
 		}
 	
 		/// <summary>
@@ -295,18 +295,18 @@ namespace CircularScrollingRoulette.Entry
 		/// </summary>
 		public void UpdateScale()
 		{
-			if (!_positionControl.scaleEdgeObjects) return;
+			if (!_roulette.scaleEdgeObjects) return;
 		
 			var y = transform.localPosition.y;
 		
-			if (y > _positionControl.anchorsY[1])
+			if (y > _roulette.anchorsY[1])
 			{
-				var scale = Mathf.InverseLerp(_positionControl.anchorsY[0], _positionControl.anchorsY[1], y);
+				var scale = Mathf.InverseLerp(_roulette.anchorsY[0], _roulette.anchorsY[1], y);
 				transform.localScale = scale * Vector3.one;
 			}
-			else if (y < _positionControl.anchorsY[2])
+			else if (y < _roulette.anchorsY[2])
 			{
-				var scale = Mathf.InverseLerp(_positionControl.anchorsY[3], _positionControl.anchorsY[2], y);
+				var scale = Mathf.InverseLerp(_roulette.anchorsY[3], _roulette.anchorsY[2], y);
 				transform.localScale = scale * Vector3.one;
 			}
 			else
@@ -325,7 +325,7 @@ namespace CircularScrollingRoulette.Entry
 			// The scale of the entry at the either end is initialLocalScale.
 			// The scale of the entry at the center is initialLocalScale * (1 + centerEntryScaleRatio).
 			transform.localScale = _initialLocalScale *
-			                       (1.0f + _positionControl.centerEntryScaleRatio *
+			                       (1.0f + _roulette.centerEntryScaleRatio *
 				                       Mathf.InverseLerp(smallest_at, 0.0f, Mathf.Abs(target_value)));
 		}
 
@@ -342,22 +342,22 @@ namespace CircularScrollingRoulette.Entry
 			_contentId = nextRouletteEntry.GetCurrentContentId() - 1;
 			_contentId = (_contentId < 0) ? _rouletteBank.GetRouletteLength() - 1 : _contentId;
 
-			if (_positionControl.rouletteType == Roulette.Roulette.RouletteType.Linear) {
+			if (_roulette.rouletteType == Roulette.Roulette.RouletteType.Linear) {
 				if (_contentId == _rouletteBank.GetRouletteLength() - 1 ||
 				    !nextRouletteEntry.isActiveAndEnabled) {
 					// If the entry has been disabled at the other side,
 					// decrease the counter of the other side.
 					if (!isActiveAndEnabled)
-						--_positionControl.numOfLowerDisabledEntries;
+						--_roulette.numOfLowerDisabledEntries;
 
 					// In linear mode, don't display the content of the other end
 					gameObject.SetActive(false);
-					++_positionControl.numOfUpperDisabledEntries;
+					++_roulette.numOfUpperDisabledEntries;
 				} else if (!isActiveAndEnabled) {
 					// The disabled entry from the other end will be enabled again,
 					// if the next entry is enabled.
 					gameObject.SetActive(true);
-					--_positionControl.numOfLowerDisabledEntries;
+					--_roulette.numOfLowerDisabledEntries;
 				}
 			}
 
@@ -372,17 +372,17 @@ namespace CircularScrollingRoulette.Entry
 			_contentId = lastRouletteEntry.GetCurrentContentId() + 1;
 			_contentId = (_contentId == _rouletteBank.GetRouletteLength()) ? 0 : _contentId;
 
-			if (_positionControl.rouletteType == Roulette.Roulette.RouletteType.Linear) {
+			if (_roulette.rouletteType == Roulette.Roulette.RouletteType.Linear) {
 				if (_contentId == 0 || !lastRouletteEntry.isActiveAndEnabled) {
 					if (!isActiveAndEnabled)
-						--_positionControl.numOfUpperDisabledEntries;
+						--_roulette.numOfUpperDisabledEntries;
 
 					// In linear mode, don't display the content of the other end
 					gameObject.SetActive(false);
-					++_positionControl.numOfLowerDisabledEntries;
+					++_roulette.numOfLowerDisabledEntries;
 				} else if (!isActiveAndEnabled) {
 					gameObject.SetActive(true);
-					--_positionControl.numOfUpperDisabledEntries;
+					--_roulette.numOfUpperDisabledEntries;
 				}
 			}
 
