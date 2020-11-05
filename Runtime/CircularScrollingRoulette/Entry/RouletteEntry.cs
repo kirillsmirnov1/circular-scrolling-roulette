@@ -41,7 +41,8 @@ namespace CircularScrollingRoulette.Entry
 		private float _cosValueAdjust;
 
 		private Vector3 _initialLocalScale;
-		public float angleRad;
+		public float radPos;
+		public float AnglePos => radPos * Mathf.Rad2Deg;
 
 		/// <summary>
 		/// Get the content ID of the entry
@@ -141,7 +142,7 @@ namespace CircularScrollingRoulette.Entry
 						UpdateYPosition();
 						break;
 					case Roulette.Roulette.Direction.Radial:
-						angleRad = rouletteEntryId * _positionControl.anglePerEntry;
+						InitAngularPos();
 						UpdateAngularPosition();
 						break;
 				}
@@ -160,12 +161,16 @@ namespace CircularScrollingRoulette.Entry
 						UpdateYPosition();
 						break;
 					case Roulette.Roulette.Direction.Radial:
-						var anglePerEntry = Mathf.PI * 2f / _positionControl.rouletteEntries.Length;
-						angleRad = rouletteEntryId * anglePerEntry;
+						InitAngularPos();
 						UpdateAngularPosition();
 						break;
 				}
 			}
+		}
+
+		private void InitAngularPos()
+		{
+			radPos = rouletteEntryId * _positionControl.radPerEntry + _positionControl.RadStart;
 		}
 
 		/// <summary>
@@ -186,8 +191,8 @@ namespace CircularScrollingRoulette.Entry
 					UpdateYPosition();
 					break;
 				case Roulette.Roulette.Direction.Radial:
-					angleRad += deltaPositionL.y;
-					angleRad %= 2f * Mathf.PI;
+					radPos += deltaPositionL.y;
+					radPos %= 2f * Mathf.PI;
 					UpdateAngularPosition();
 					break;
 			}
@@ -196,8 +201,8 @@ namespace CircularScrollingRoulette.Entry
 		private void UpdateAngularPosition()
 		{
 			transform.localPosition = new Vector2(
-				_positionControl.radius * Mathf.Cos(angleRad),
-				_positionControl.radius * Mathf.Sin(angleRad));
+				_positionControl.radius * Mathf.Cos(radPos),
+				_positionControl.radius * Mathf.Sin(radPos));
 		}
 	
 		/// <summary>

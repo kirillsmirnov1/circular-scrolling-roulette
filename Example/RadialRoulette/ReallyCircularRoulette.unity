@@ -433,11 +433,14 @@ MonoBehaviour:
       m_Calls: []
   controlButtons: []
   entryGapFactor: 2
-  entrySlidingFrames: 4000
+  entrySlidingFrames: 500
   entrySlidingSpeedFactor: 0.2
   rouletteCurvature: 0.3
   positionAdjust: -0.7
   centerEntryScaleRatio: 0.32
+  radius: 500
+  degreeShift: 90
+  radPerEntry: 0
   numOfUpperDisabledEntries: 0
   numOfLowerDisabledEntries: 0
   scaleEdgeObjects: 0
@@ -451,8 +454,6 @@ MonoBehaviour:
   baselineSlidingFactor: 0.02
   logLogic: 1
   logSlidingDistance: 0
-  radius: 500
-  anglePerEntry: 0
 --- !u!114 &1747325527
 MonoBehaviour:
   m_ObjectHideFlags: 0

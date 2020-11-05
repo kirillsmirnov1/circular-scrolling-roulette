@@ -85,6 +85,14 @@ namespace CircularScrollingRoulette.Roulette
 		public float positionAdjust = -0.7f;
 		[Tooltip("Set the scale ratio of the center entry.")]
 		public float centerEntryScaleRatio = 0.32f;
+		
+		[Header("Radial settings")]
+		public float radius = 1f;
+		[Tooltip("Sets centered position for radial mode. Counting counter-clock-wise from (1,0)")]
+		[Range(0, 360)]
+		public float angleStart;
+		public float RadStart => angleStart * Mathf.Deg2Rad;
+		[HideInInspector] public float radPerEntry;
 		/*===============================*/
 
 		// The canvas plane which the scrolling roulette is at.
@@ -150,8 +158,6 @@ namespace CircularScrollingRoulette.Roulette
 #pragma warning restore 0649
 		
 		protected Action OnSlidingFinishedCallback;
-		public float radius = 1f;
-		public float anglePerEntry;
 
 		/// <summary>
 		/// Notice: RouletteEntry will initialize its variables from here, so Roulette
@@ -214,9 +220,9 @@ namespace CircularScrollingRoulette.Roulette
 
 			CanvasMaxPosL = GenerateCanvasMaxPosL();
 			
-			anglePerEntry = Mathf.PI * 2f / rouletteEntries.Length;
+			radPerEntry = Mathf.PI * 2f / rouletteEntries.Length;
 			
-			UnitPosL = (direction != Direction.Radial) ? (CanvasMaxPosL / entryGapFactor) : anglePerEntry * Vector2.up;
+			UnitPosL = (direction != Direction.Radial) ? (CanvasMaxPosL / entryGapFactor) : radPerEntry * Vector2.up;
 			
 			LowerBoundPosL = UnitPosL * (-1 * rouletteEntries.Length / 2 - 1);
 			UpperBoundPosL = UnitPosL * (rouletteEntries.Length / 2 + 1);
@@ -527,7 +533,7 @@ namespace CircularScrollingRoulette.Roulette
 				case Direction.Radial:
 					foreach (RouletteEntry rouletteEntry in rouletteEntries)
 					{
-						deltaPos = -rouletteEntry.angleRad;
+						deltaPos = -rouletteEntry.radPos;
 						if (Mathf.Abs(deltaPos) < Mathf.Abs(minDeltaPos))
 							minDeltaPos = deltaPos;
 					}
@@ -644,7 +650,8 @@ namespace CircularScrollingRoulette.Roulette
 				case Direction.Radial:
 					foreach (var rouletteEntry in rouletteEntries)
 					{
-						position = Mathf.Min(Mathf.Abs(rouletteEntry.angleRad), Mathf.Abs(2 * Mathf.PI - rouletteEntry.angleRad));
+						position = Mathf.Abs(Mathf.DeltaAngle(angleStart, rouletteEntry.AnglePos));
+						
 						if (position < minPosition)
 						{
 							minPosition = position;
