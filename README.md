@@ -1,5 +1,10 @@
 # Circular Scrolling List
 
+## Install
+
+Add following line to `Packages/manifest.json`:  
+`"trulden.me.t.circularscrollingroulette": "https://github.com/kirillsmirnov1/circular-scrolling-roulette.git"`
+
 ## Features
 
 * Use finite list boxes to display infinite list items
