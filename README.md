@@ -16,8 +16,8 @@ Add following line to `Packages/manifest.json`:
 ### List mode
 
 * List type: Circular or Linear mode
-* Control mode: Drag, Button, or Mouse wheel
-* Direction: Vertical or Horizontal
+* Control mode: Drag, Button (may be combined with Drag), or Mouse wheel
+* Direction: Vertical, Horizontal or Radial
 
 [Demo video](https://youtu.be/k63eqwfj-1c)
 
