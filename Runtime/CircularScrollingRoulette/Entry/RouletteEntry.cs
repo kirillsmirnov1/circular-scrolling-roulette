@@ -1,4 +1,5 @@
-﻿using CircularScrollingRoulette.Bank;
+﻿using System;
+using CircularScrollingRoulette.Bank;
 using CircularScrollingRoulette.Entry.Content;
 using UnityEngine;
 
@@ -287,7 +288,7 @@ namespace CircularScrollingRoulette.Entry
 		/// </summary>
 		private void CheckAnchor()
 		{
-			_roulette.CheckAnchor(rouletteEntryId, transform.localPosition.y);
+			_roulette.CheckAnchor(rouletteEntryId, transform.localPosition.y, transform.localPosition.x);
 		}
 	
 		/// <summary>
@@ -296,9 +297,22 @@ namespace CircularScrollingRoulette.Entry
 		public void UpdateScale()
 		{
 			if (!_roulette.scaleEdgeObjects) return;
-		
+
+			switch (_roulette.direction)
+			{
+				case Roulette.Roulette.Direction.Vertical:
+					ScaleByY();
+					break;
+				case Roulette.Roulette.Direction.Horizontal:
+					ScaleByX();
+					break;
+			}
+		}
+
+		private void ScaleByY()
+		{
 			var y = transform.localPosition.y;
-		
+
 			if (y > _roulette.anchorsY[1])
 			{
 				var scale = Mathf.InverseLerp(_roulette.anchorsY[0], _roulette.anchorsY[1], y);
@@ -314,7 +328,27 @@ namespace CircularScrollingRoulette.Entry
 				transform.localScale = Vector3.one;
 			}
 		}
-	
+		
+		private void ScaleByX()
+		{
+			var x = transform.localPosition.x;
+
+			if (x < _roulette.anchorsX[1])
+			{
+				var scale = Mathf.InverseLerp(_roulette.anchorsX[0], _roulette.anchorsX[1], x);
+				transform.localScale = scale * Vector3.one;
+			}
+			else if (x > _roulette.anchorsX[2])
+			{
+				var scale = Mathf.InverseLerp(_roulette.anchorsX[3], _roulette.anchorsX[2], x);
+				transform.localScale = scale * Vector3.one;
+			}
+			else
+			{
+				transform.localScale = Vector3.one;
+			}
+		}
+
 		/// <summary>
 		/// Scale the RouletteEntry according to its position
 		/// </summary>

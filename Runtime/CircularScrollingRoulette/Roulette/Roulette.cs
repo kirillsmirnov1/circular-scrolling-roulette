@@ -141,8 +141,8 @@ namespace CircularScrollingRoulette.Roulette
 		[Range(0f, 1f)]
 		[Tooltip("At which percentage of path to anchor entry scale equals zero")]
 		public float scaleShift = 0.8f;
-		[HideInInspector]
-		public float[] anchorsY = new float[4];
+		[HideInInspector] public float[] anchorsY = new float[4];
+		[HideInInspector] public float[] anchorsX = new float[4];
 		private int _entriesCheckedForAnchor;
 		private bool _rouletteSliding;
 
@@ -685,15 +685,17 @@ namespace CircularScrollingRoulette.Roulette
 		/// </summary>
 		/// <param name="i">entry index in array</param>
 		/// <param name="entryYPos">entry position</param>
-		public void CheckAnchor(int i, float entryYPos)
+		public void CheckAnchor(int i, float entryYPos, float entryXPos)
 		{
 			if (i <= 1) // if it takes one of first two positions
 			{
 				anchorsY[i] = entryYPos;
+				anchorsX[i] = entryXPos;
 			} 
 			else if (i >= rouletteEntries.Length - 2) // or one of the last two positions
 			{
 				anchorsY[i - (rouletteEntries.Length - 4)] = entryYPos;
+				anchorsX[i - (rouletteEntries.Length - 4)] = entryXPos;
 			}
 
 			_entriesCheckedForAnchor++;
@@ -703,6 +705,9 @@ namespace CircularScrollingRoulette.Roulette
 				// Move edge anchors closer to center
 				anchorsY[0] = Mathf.Lerp(anchorsY[1], anchorsY[0], scaleShift);
 				anchorsY[3] = Mathf.Lerp(anchorsY[2], anchorsY[3], scaleShift);
+				
+				anchorsX[0] = Mathf.Lerp(anchorsX[1], anchorsX[0], scaleShift);
+				anchorsX[3] = Mathf.Lerp(anchorsX[2], anchorsX[3], scaleShift);
 				ScaleEntries();
 			}
 		}
