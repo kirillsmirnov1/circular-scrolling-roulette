@@ -288,7 +288,7 @@ namespace CircularScrollingRoulette.Entry
 		/// </summary>
 		private void CheckAnchor()
 		{
-			_roulette.CheckAnchor(rouletteEntryId, transform.localPosition.y, transform.localPosition.x);
+			_roulette.CheckAnchor(rouletteEntryId, transform.localPosition);
 		}
 	
 		/// <summary>
@@ -313,14 +313,14 @@ namespace CircularScrollingRoulette.Entry
 		{
 			var y = transform.localPosition.y;
 
-			if (y > _roulette.anchorsY[1])
+			if (y > _roulette.anchors[1].y)
 			{
-				var scale = Mathf.InverseLerp(_roulette.anchorsY[0], _roulette.anchorsY[1], y);
+				var scale = Mathf.InverseLerp(_roulette.anchors[0].y, _roulette.anchors[1].y, y);
 				transform.localScale = scale * Vector3.one;
 			}
-			else if (y < _roulette.anchorsY[2])
+			else if (y < _roulette.anchors[2].y)
 			{
-				var scale = Mathf.InverseLerp(_roulette.anchorsY[3], _roulette.anchorsY[2], y);
+				var scale = Mathf.InverseLerp(_roulette.anchors[3].y, _roulette.anchors[2].y, y);
 				transform.localScale = scale * Vector3.one;
 			}
 			else
@@ -333,14 +333,14 @@ namespace CircularScrollingRoulette.Entry
 		{
 			var x = transform.localPosition.x;
 
-			if (x < _roulette.anchorsX[1])
+			if (x < _roulette.anchors[1].x)
 			{
-				var scale = Mathf.InverseLerp(_roulette.anchorsX[0], _roulette.anchorsX[1], x);
+				var scale = Mathf.InverseLerp(_roulette.anchors[0].x, _roulette.anchors[1].x, x);
 				transform.localScale = scale * Vector3.one;
 			}
-			else if (x > _roulette.anchorsX[2])
+			else if (x > _roulette.anchors[2].x)
 			{
-				var scale = Mathf.InverseLerp(_roulette.anchorsX[3], _roulette.anchorsX[2], x);
+				var scale = Mathf.InverseLerp(_roulette.anchors[3].x, _roulette.anchors[2].x, x);
 				transform.localScale = scale * Vector3.one;
 			}
 			else

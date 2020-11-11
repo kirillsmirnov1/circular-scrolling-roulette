@@ -141,8 +141,7 @@ namespace CircularScrollingRoulette.Roulette
 		[Range(0f, 1f)]
 		[Tooltip("At which percentage of path to anchor entry scale equals zero")]
 		public float scaleShift = 0.8f;
-		[HideInInspector] public float[] anchorsY = new float[4];
-		[HideInInspector] public float[] anchorsX = new float[4];
+		[HideInInspector] public Vector2[] anchors = new Vector2[4];
 		private int _entriesCheckedForAnchor;
 		private bool _rouletteSliding;
 
@@ -685,17 +684,15 @@ namespace CircularScrollingRoulette.Roulette
 		/// </summary>
 		/// <param name="i">entry index in array</param>
 		/// <param name="entryYPos">entry position</param>
-		public void CheckAnchor(int i, float entryYPos, float entryXPos)
+		public void CheckAnchor(int i, Vector2 entryPos)
 		{
 			if (i <= 1) // if it takes one of first two positions
 			{
-				anchorsY[i] = entryYPos;
-				anchorsX[i] = entryXPos;
+				anchors[i] = entryPos;
 			} 
 			else if (i >= rouletteEntries.Length - 2) // or one of the last two positions
 			{
-				anchorsY[i - (rouletteEntries.Length - 4)] = entryYPos;
-				anchorsX[i - (rouletteEntries.Length - 4)] = entryXPos;
+				anchors[i - (rouletteEntries.Length - 4)] = entryPos;
 			}
 
 			_entriesCheckedForAnchor++;
@@ -703,18 +700,15 @@ namespace CircularScrollingRoulette.Roulette
 			if (_entriesCheckedForAnchor == rouletteEntries.Length)
 			{
 				// Move edge anchors closer to center
-				anchorsY[0] = Mathf.Lerp(anchorsY[1], anchorsY[0], scaleShift);
-				anchorsY[3] = Mathf.Lerp(anchorsY[2], anchorsY[3], scaleShift);
-				
-				anchorsX[0] = Mathf.Lerp(anchorsX[1], anchorsX[0], scaleShift);
-				anchorsX[3] = Mathf.Lerp(anchorsX[2], anchorsX[3], scaleShift);
+				anchors[0] = Vector2.Lerp(anchors[1], anchors[0], scaleShift);
+				anchors[3] = Vector2.Lerp(anchors[2], anchors[3], scaleShift);
 				ScaleEntries();
 			}
 		}
 
 		/// <summary>
 		/// Explicitly check entries scale
-		/// <para>On first init, anchorsY is not filled fully, so their scales would be broken and we need to recheck them manually</para>
+		/// <para>On first init, anchors is not filled fully, so their scales would be broken and we need to recheck them manually</para>
 		/// </summary>
 		private void ScaleEntries()
 		{
