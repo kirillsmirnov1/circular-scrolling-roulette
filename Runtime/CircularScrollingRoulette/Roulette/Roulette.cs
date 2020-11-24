@@ -21,7 +21,9 @@ namespace CircularScrollingRoulette.Roulette
 	/// </summary>
 	public class Roulette : MonoBehaviour, IControlEventHandler
 	{
-		public event Action<int> OnCenteredContentIdUpdate; 
+		public event Action<int> OnCenteredContentIdUpdate;
+		public event Action<int> OnCenteredContentUpdate;
+		public event Action OnRouletteBeginDrag;
 		
 		public enum RouletteType
 		{
@@ -181,7 +183,7 @@ namespace CircularScrollingRoulette.Roulette
 		{
 			if(logLogic) Debug.Log("CheckCenteredContentId()");
 			var id = GetCenteredContentId();
-			
+			OnCenteredContentUpdate?.Invoke(id);
 			if (id == centeredContentId) return;
 			
 			centeredContentId = id;
@@ -294,6 +296,7 @@ namespace CircularScrollingRoulette.Roulette
 		/* ====== Callback functions for the unity event system ====== */
 		public void OnBeginDrag(PointerEventData pointer)
 		{
+			OnRouletteBeginDrag?.Invoke();
 			_inputPositionHandler(pointer, TouchPhase.Began);
 		}
 
