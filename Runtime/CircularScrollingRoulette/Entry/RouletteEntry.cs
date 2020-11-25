@@ -2,6 +2,7 @@
 using CircularScrollingRoulette.Bank;
 using CircularScrollingRoulette.Entry.Content;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace CircularScrollingRoulette.Entry
 {
@@ -77,8 +78,16 @@ namespace CircularScrollingRoulette.Entry
 			InitialPosition();
 			InitContent();
 			CheckAnchor();
+			AddClickEvent();
 		}
-	
+
+		private void AddClickEvent()
+		{
+			GetComponentInChildren<Button>()
+				?.onClick
+				.AddListener(() => _roulette.onEntryClick.Invoke(_contentId));
+		}
+
 		/// <summary>
 		/// Initialize the content of RouletteEntry. 
 		/// </summary>
