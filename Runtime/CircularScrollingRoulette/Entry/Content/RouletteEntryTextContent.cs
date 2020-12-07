@@ -9,18 +9,18 @@ namespace CircularScrollingRoulette.Entry.Content
     [RequireComponent(typeof(TextMeshProUGUI))]
     public class RouletteEntryTextContent : RouletteEntryContent
     {
-        private TextMeshProUGUI _text;
+        protected TextMeshProUGUI Text;
 
-        private void Awake()
+        protected virtual void Awake()
         {
-            _text = GetComponent<TextMeshProUGUI>();
+            Text = GetComponent<TextMeshProUGUI>();
         }
 
         public override void SetContent(object content)
         {
-            _text.text = content.ToString();
+            Text.text = content.ToString();
         }
 
-        public override object GetContent() => _text.text;
+        public override object GetContent() => Text.text;
     }
 }

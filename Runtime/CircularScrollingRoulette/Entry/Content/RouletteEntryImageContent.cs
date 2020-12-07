@@ -6,14 +6,14 @@ namespace CircularScrollingRoulette.Entry.Content
     [RequireComponent(typeof(Image))]
     public class RouletteEntryImageContent : RouletteEntryContent
     {
-        private Image _image;
+        protected Image Image;
 
-        private void Awake() => _image = GetComponent<Image>();
+        protected virtual void Awake() => Image = GetComponent<Image>();
 
         public override void SetContent(object content) 
-            => _image.sprite = (Sprite) content;
+            => Image.sprite = (Sprite) content;
 
         public override object GetContent() 
-            => _image.sprite;
+            => Image.sprite;
     }
 }
