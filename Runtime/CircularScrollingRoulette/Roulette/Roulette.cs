@@ -158,7 +158,7 @@ namespace CircularScrollingRoulette.Roulette
 		[SerializeField] private bool logSlidingDistance;
 #pragma warning restore 0649
 		
-		protected Action OnSlidingFinishedCallback;
+		public event Action OnSlidingFinishedCallback;
 
 		/// <summary>
 		/// Notice: RouletteEntry will initialize its variables from here, so Roulette
