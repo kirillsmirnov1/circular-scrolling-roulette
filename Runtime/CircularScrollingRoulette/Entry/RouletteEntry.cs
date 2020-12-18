@@ -29,6 +29,7 @@ namespace CircularScrollingRoulette.Entry
 		private Roulette.Roulette _roulette;
 		protected RouletteBank _rouletteBank;
 		protected int _contentId;
+		protected int _prevContentId = -1;
 
 		/* ====== Position variables ====== */
 		// Position calculated here is in the local space of the roulette
@@ -130,6 +131,8 @@ namespace CircularScrollingRoulette.Entry
 		{
 			// Update the content according to its contentID.
 			_content.SetContent(_rouletteBank.GetRouletteContent(_contentId));
+			_roulette.EntryChangedContent(this, _prevContentId, _contentId);
+			_prevContentId = _contentId;
 		}
 
 		/* Initialize the local position of the RouletteEntry according to its ID

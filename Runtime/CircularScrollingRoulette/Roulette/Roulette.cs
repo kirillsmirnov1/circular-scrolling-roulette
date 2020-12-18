@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using CircularScrollingRoulette.Bank;
 using CircularScrollingRoulette.Entry;
 using UnityEngine;
@@ -138,6 +140,9 @@ namespace CircularScrollingRoulette.Roulette
 		[HideInInspector]
 		public int numOfLowerDisabledEntries;
 		private int _maxNumOfDisabledEntries;
+		
+		protected Dictionary<int, RouletteEntry> ContentInEntries;
+		protected int LastContentId;
 	
 		// Variables for scaling
 		[Header("Scaling")]
@@ -169,6 +174,7 @@ namespace CircularScrollingRoulette.Roulette
 		/// </summary>
 		protected virtual void Start()
 		{
+			InitHelperData();
 			InstantiateEntries();
 			InitializePositionVars();
 			InitializeInputFunction();
@@ -176,6 +182,12 @@ namespace CircularScrollingRoulette.Roulette
 			InitCallbacks();
 			StartShift();
 			_maxNumOfDisabledEntries = rouletteEntries.Length / 2;
+		}
+
+		protected virtual void InitHelperData()
+		{
+			ContentInEntries = new Dictionary<int, RouletteEntry>();
+			LastContentId = rouletteBank.GetRouletteLength() - 1;
 		}
 
 		private void StartShift()
@@ -607,11 +619,18 @@ namespace CircularScrollingRoulette.Roulette
 		{
 			switch (direction) {
 				case Direction.Vertical:
+				{
 					// If the roulette reaches the head and it keeps going down, or
 					// the roulette reaches the tail and it keeps going up,
 					// make the roulette end be stopped at the center.
-					if ((numOfUpperDisabledEntries >= _maxNumOfDisabledEntries && _slidingDistanceLeft.y < 0) ||
-					    (numOfLowerDisabledEntries >= _maxNumOfDisabledEntries && _slidingDistanceLeft.y > 0)) {
+					var slidingUp = _slidingDistanceLeft.y < 0;
+					var slidingDown = _slidingDistanceLeft.y > 0;
+
+					if ((numOfUpperDisabledEntries >= _maxNumOfDisabledEntries && slidingUp) ||
+					    (numOfLowerDisabledEntries >= _maxNumOfDisabledEntries && slidingDown) ||
+					    (ContentIsActive(0) && slidingUp) ||
+					    (ContentIsActive(LastContentId) && slidingDown))
+					{
 						Vector3 remainDistance = FindDeltaPositionToCenter();
 						_slidingDistanceLeft.y = remainDistance.y;
 
@@ -620,23 +639,35 @@ namespace CircularScrollingRoulette.Roulette
 					}
 
 					break;
+				}
 
 				case Direction.Horizontal:
+				{
 					// If the roulette reaches the head and it keeps going left, or
 					// the roulette reaches the tail and it keeps going right,
 					// make the roulette end be stopped at the center.
-					if ((numOfUpperDisabledEntries >= _maxNumOfDisabledEntries && _slidingDistanceLeft.x > 0) ||
-					    (numOfLowerDisabledEntries >= _maxNumOfDisabledEntries && _slidingDistanceLeft.x < 0)) {
+					var slidingLeft = _slidingDistanceLeft.x > 0;
+					var slidingRight = _slidingDistanceLeft.x < 0;
+					
+					if ((numOfUpperDisabledEntries >= _maxNumOfDisabledEntries && slidingLeft) ||
+					    (numOfLowerDisabledEntries >= _maxNumOfDisabledEntries && slidingRight)||
+					    (ContentIsActive(0) && slidingLeft) ||
+					    (ContentIsActive(LastContentId) && slidingRight))
+					{
 						Vector3 remainDistance = FindDeltaPositionToCenter();
 						_slidingDistanceLeft.x = remainDistance.x;
 					}
 
 					break;
+				}
 				default:
 					throw new ArgumentOutOfRangeException();
 			}
 		}
 
+		private bool ContentIsActive(int contentId) 
+			=> ContentInEntries.ContainsKey(contentId) && 
+			   ContentInEntries[contentId].isActiveAndEnabled;
 
 		/// <summary>
 		/// Get the object of the centered RouletteEntry.
@@ -738,6 +769,12 @@ namespace CircularScrollingRoulette.Roulette
 			{
 				entry.UpdateScale();
 			}
+		}
+
+		public void EntryChangedContent(RouletteEntry entry, int prevContentId, int contentId)
+		{
+			ContentInEntries.Remove(prevContentId);
+			ContentInEntries.Add(contentId, entry);
 		}
 	}
 }
