@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using CircularScrollingRoulette.Bank;
 using CircularScrollingRoulette.Entry;
 using UnityEngine;
@@ -36,7 +36,8 @@ namespace CircularScrollingRoulette.Roulette
 			Drag,       // By the mouse pointer or finger
 			Button,     // By the up/down button
 			MouseWheel,  // By the mouse wheel
-			DragAndButton 
+			DragAndButton,
+			DragAndWheel,
 		}
 
 		public enum Direction
@@ -287,6 +288,15 @@ namespace CircularScrollingRoulette.Roulette
 
 					_inputPositionHandler =
 						delegate { };
+					foreach (Button button in controlButtons)
+						button.gameObject.SetActive(false);
+					break;
+				
+				case ControlMode.DragAndWheel:
+					_inputPositionHandler = DragPositionHandler;
+
+					_scrollHandler = ScrollDeltaHandler;
+					
 					foreach (Button button in controlButtons)
 						button.gameObject.SetActive(false);
 					break;
