@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using CircularScrollingRoulette.Bank;
 using CircularScrollingRoulette.Entry;
 using UnityEngine;
@@ -70,6 +70,8 @@ namespace CircularScrollingRoulette.Roulette
 		public Button[] controlButtons;
 
 		[Header("Parameters")]
+		[Tooltip("Number of entries to shift to at start")]
+		public int startShift = 0;
 		[Tooltip("Set the distance between each RouletteEntry. The larger, the closer.")]
 		public float entryGapFactor = 2.0f;
 		[Tooltip("Set the sliding duration in frames. The larger, the longer.")]
@@ -172,7 +174,14 @@ namespace CircularScrollingRoulette.Roulette
 			InitializeInputFunction();
 			InitializeEntryDependency();
 			InitCallbacks();
+			StartShift();
 			_maxNumOfDisabledEntries = rouletteEntries.Length / 2;
+		}
+
+		private void StartShift()
+		{
+			SetUnitMove(startShift);
+			_slidingFramesLeft = 1;
 		}
 
 		private void InitCallbacks()
