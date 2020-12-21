@@ -72,8 +72,6 @@ namespace CircularScrollingRoulette.Roulette
 		public Button[] controlButtons;
 
 		[Header("Parameters")]
-		[Tooltip("Number of entries to shift to at start")]
-		public int startShift = 0;
 		[Tooltip("Set the distance between each RouletteEntry. The larger, the closer.")]
 		public float entryGapFactor = 2.0f;
 		[Tooltip("Set the sliding duration in frames. The larger, the longer.")]
@@ -186,13 +184,16 @@ namespace CircularScrollingRoulette.Roulette
 
 		protected virtual void InitHelperData()
 		{
+			numberOfEntries = numberOfEntries > rouletteBank.GetRouletteLength()
+				? rouletteBank.GetRouletteLength()
+				: numberOfEntries; 
 			ContentInEntries = new Dictionary<int, RouletteEntry>();
 			LastContentId = rouletteBank.GetRouletteLength() - 1;
 		}
 
 		private void StartShift()
 		{
-			SetUnitMove(startShift);
+			SetUnitMove(numberOfEntries / 2);
 			_slidingFramesLeft = 1;
 		}
 
