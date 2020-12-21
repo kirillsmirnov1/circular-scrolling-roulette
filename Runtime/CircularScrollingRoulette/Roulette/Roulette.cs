@@ -133,11 +133,13 @@ namespace CircularScrollingRoulette.Roulette
 		private bool _needToAlignToCenter;
 
 		// Variables for linear mode
+		public bool blockInputOnLimitedData;
 		[HideInInspector]
 		public int numOfUpperDisabledEntries;
 		[HideInInspector]
 		public int numOfLowerDisabledEntries;
 		private int _maxNumOfDisabledEntries;
+		private bool _limitedData;
 		
 		protected Dictionary<int, RouletteEntry> ContentInEntries;
 		protected int LastContentId;
@@ -184,6 +186,8 @@ namespace CircularScrollingRoulette.Roulette
 
 		protected virtual void InitHelperData()
 		{
+			_limitedData = numberOfEntries >= rouletteBank.GetRouletteLength();
+			
 			numberOfEntries = numberOfEntries > rouletteBank.GetRouletteLength()
 				? rouletteBank.GetRouletteLength()
 				: numberOfEntries; 
@@ -285,6 +289,16 @@ namespace CircularScrollingRoulette.Roulette
 		/// </summary>
 		void InitializeInputFunction()
 		{
+			if (_limitedData && blockInputOnLimitedData)
+			{
+				_inputPositionHandler = delegate {  };
+				_scrollHandler = delegate {  };
+				foreach (Button button in controlButtons)
+					button.gameObject.SetActive(false);
+				
+				return;
+			}
+			
 			switch (controlMode) {
 				case ControlMode.Drag:
 					_inputPositionHandler = DragPositionHandler;
