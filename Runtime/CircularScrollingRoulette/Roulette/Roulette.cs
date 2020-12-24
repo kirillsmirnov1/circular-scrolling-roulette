@@ -143,6 +143,7 @@ namespace CircularScrollingRoulette.Roulette
 		
 		protected Dictionary<int, RouletteEntry> ContentInEntries;
 		protected int LastContentId;
+		private bool _allEntriesInitiated;
 	
 		// Variables for scaling
 		[Header("Scaling")]
@@ -425,6 +426,8 @@ namespace CircularScrollingRoulette.Roulette
 	 */
 		void Update()
 		{
+			if(!_allEntriesInitiated) return;
+			
 			if (_slidingFramesLeft > 0)
 			{
 				_rouletteSliding = true;
@@ -767,6 +770,7 @@ namespace CircularScrollingRoulette.Roulette
 
 			if (_entriesCheckedForAnchor == rouletteEntries.Length)
 			{
+				_allEntriesInitiated = true;
 				// Move edge anchors closer to center
 				anchors[0] = Vector2.Lerp(anchors[1], anchors[0], scaleShift);
 				anchors[3] = Vector2.Lerp(anchors[2], anchors[3], scaleShift);
