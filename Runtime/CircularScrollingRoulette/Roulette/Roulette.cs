@@ -92,7 +92,7 @@ namespace CircularScrollingRoulette.Roulette
 		public float centerEntryScaleRatio = 0.32f;
 		
 		[Header("Radial settings")]
-		public float radius = 1f;
+		public float radius = 100f;
 		[Tooltip("Sets centered position for radial mode. Counting counter-clock-wise from (1,0)")]
 		[Range(0, 360)]
 		public float angleStart;
@@ -187,13 +187,16 @@ namespace CircularScrollingRoulette.Roulette
 
 		protected virtual void InitHelperData()
 		{
-			_limitedData = numberOfEntries >= rouletteBank.GetRouletteLength();
+			if (rouletteType == RouletteType.Linear)
+			{
+				_limitedData = numberOfEntries >= rouletteBank.GetRouletteLength();
 			
-			numberOfEntries = numberOfEntries > rouletteBank.GetRouletteLength()
-				? rouletteBank.GetRouletteLength()
-				: numberOfEntries; 
-			ContentInEntries = new Dictionary<int, RouletteEntry>();
-			LastContentId = rouletteBank.GetRouletteLength() - 1;
+				numberOfEntries = numberOfEntries > rouletteBank.GetRouletteLength()
+					? rouletteBank.GetRouletteLength()
+					: numberOfEntries; 
+				ContentInEntries = new Dictionary<int, RouletteEntry>();
+				LastContentId = rouletteBank.GetRouletteLength() - 1;
+			}
 		}
 
 		private void StartShift()
@@ -638,16 +641,7 @@ namespace CircularScrollingRoulette.Roulette
 			switch (direction) {
 				case Direction.Vertical:
 				{
-					// If the roulette reaches the head and it keeps going down, or
-					// the roulette reaches the tail and it keeps going up,
-					// make the roulette end be stopped at the center.
-					var slidingUp = _slidingDistanceLeft.y < 0;
-					var slidingDown = _slidingDistanceLeft.y > 0;
-
-					if ((numOfUpperDisabledEntries >= _maxNumOfDisabledEntries && slidingUp) ||
-					    (numOfLowerDisabledEntries >= _maxNumOfDisabledEntries && slidingDown) ||
-					    (ContentIsActive(0) && slidingUp) ||
-					    (ContentIsActive(LastContentId) && slidingDown))
+					if (ReachedEnd())
 					{
 						Vector3 remainDistance = FindDeltaPositionToCenter();
 						_slidingDistanceLeft.y = remainDistance.y;
@@ -661,16 +655,7 @@ namespace CircularScrollingRoulette.Roulette
 
 				case Direction.Horizontal:
 				{
-					// If the roulette reaches the head and it keeps going left, or
-					// the roulette reaches the tail and it keeps going right,
-					// make the roulette end be stopped at the center.
-					var slidingLeft = _slidingDistanceLeft.x > 0;
-					var slidingRight = _slidingDistanceLeft.x < 0;
-					
-					if ((numOfUpperDisabledEntries >= _maxNumOfDisabledEntries && slidingLeft) ||
-					    (numOfLowerDisabledEntries >= _maxNumOfDisabledEntries && slidingRight)||
-					    (ContentIsActive(0) && slidingLeft) ||
-					    (ContentIsActive(LastContentId) && slidingRight))
+					if (ReachedEnd())
 					{
 						Vector3 remainDistance = FindDeltaPositionToCenter();
 						_slidingDistanceLeft.x = remainDistance.x;
@@ -681,6 +666,22 @@ namespace CircularScrollingRoulette.Roulette
 				default:
 					throw new ArgumentOutOfRangeException();
 			}
+		}
+
+		protected virtual bool ReachedEnd()
+		{
+			(bool slidingUp, bool slidingDown) = direction switch
+			{
+				Direction.Vertical => (_slidingDistanceLeft.y < 0, _slidingDistanceLeft.y > 0),
+				Direction.Horizontal => (_slidingDistanceLeft.x > 0, _slidingDistanceLeft.x < 0),
+				Direction.Radial => throw new ArgumentException("Radial direction not supported by Linear type"),
+				_ => throw new ArgumentOutOfRangeException()
+			};
+
+			return numOfUpperDisabledEntries >= _maxNumOfDisabledEntries && slidingUp ||
+			       numOfLowerDisabledEntries >= _maxNumOfDisabledEntries && slidingDown || 
+			       ContentIsActive(0) && slidingUp || 
+			       ContentIsActive(LastContentId) && slidingDown;
 		}
 
 		private bool ContentIsActive(int contentId) 
@@ -792,6 +793,7 @@ namespace CircularScrollingRoulette.Roulette
 
 		public void EntryChangedContent(RouletteEntry entry, int prevContentId, int contentId)
 		{
+			if(rouletteType != RouletteType.Linear) return;
 			ContentInEntries.Remove(prevContentId);
 			ContentInEntries.Add(contentId, entry);
 		}
