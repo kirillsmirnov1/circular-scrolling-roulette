@@ -79,6 +79,8 @@ namespace CircularScrollingRoulette.Roulette
 		[Tooltip(" Set the sliding speed. The larger, the quicker.")]
 		[Range(0.0f, 1.0f)]
 		public float entrySlidingSpeedFactor = 0.2f;
+		[Tooltip("Affects the speed")]
+		[SerializeField] private float dTMod = 200;
 		[Tooltip("Set the scrolling roulette curving to left/right, or up/down in HORIZONTAL mode." +
 		         "\nPositive: Curve to right (up); Negative: Curve to left (down).")]
 		[Range(-1.0f, 1.0f)]
@@ -462,8 +464,9 @@ namespace CircularScrollingRoulette.Roulette
 						entrySlidingSpeedFactor = baselineSlidingFactor;
 						if(logSlidingDistance) Debug.Log("Finish boost activated");
 					}
-					_slidingDistance = Vector3.Lerp(Vector3.zero, _slidingDistanceLeft,
-						entrySlidingSpeedFactor);
+
+					_slidingDistance = Vector3.Lerp(Vector3.zero, _slidingDistanceLeft, 
+						                   entrySlidingSpeedFactor) * (Time.deltaTime * dTMod);
 
 					if (logSlidingDistance)
 					{
