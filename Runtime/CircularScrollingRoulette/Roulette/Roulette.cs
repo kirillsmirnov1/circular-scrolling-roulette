@@ -426,8 +426,9 @@ namespace CircularScrollingRoulette.Roulette
 		{
 			if(!_allEntriesInitiated) return;
 			
-			if (_slidingDistanceLeft.sqrMagnitude > 0)
+			if (_slidingDistanceLeft.sqrMagnitude > 1)
 			{
+				
 				_rouletteSliding = true;
 				if (rouletteType == RouletteType.Linear) {
 					StopRouletteWhenReachEnd();
@@ -465,8 +466,6 @@ namespace CircularScrollingRoulette.Roulette
 					_rouletteSliding = false;
 					_finishBoostActivated = false;
 					OnSlidingFinishedCallback?.Invoke();
-					Debug.Log("Slide finished");
-					// FIXME almost can't get here 
 				}
 				
 				}
