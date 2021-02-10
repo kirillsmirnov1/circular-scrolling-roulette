@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using CircularScrollingRoulette.Bank;
 using CircularScrollingRoulette.Entry;
 using UnityEngine;
@@ -74,8 +74,6 @@ namespace CircularScrollingRoulette.Roulette
 		[Header("Parameters")]
 		[Tooltip("Set the distance between each RouletteEntry. The larger, the closer.")]
 		public float entryGapFactor = 2.0f;
-		[Tooltip("Set the sliding duration in frames. The larger, the longer.")]
-		public int entrySlidingFrames = 35;
 		[Tooltip(" Set the sliding speed. The larger, the quicker.")]
 		[Range(0.0f, 1.0f)]
 		public float entrySlidingSpeedFactor = 0.2f;
@@ -103,7 +101,7 @@ namespace CircularScrollingRoulette.Roulette
 		/*===============================*/
 
 		// The canvas plane which the scrolling roulette is at.
-		protected Canvas _parentCanvas;
+		protected Canvas ParentCanvas;
 
 		// The constrains of position in the local space of the canvas plane.
 		public Vector2 CanvasMaxPosL { get; private set; }
@@ -121,13 +119,9 @@ namespace CircularScrollingRoulette.Roulette
 		// Input mouse/finger position in the local space of the roulette.
 		private Vector3 _startInputPosL;
 		private Vector3 _endInputPosL;
-		private Vector3 _curFrameInputPosL;
 		private Vector3 _deltaInputPosL;
-		private int _numOfInputFrames;
-
-		// Variables for moving rouletteEntries
-		private int _slidingFramesLeft;
-		private Vector3 _slidingDistance;     // The sliding distance for each frame
+		
+		private Vector3 _slidingDistance;     
 		private Vector3 _slidingDistanceLeft;
 		/// <summary>
 		/// The flag indicating that one of the entries need to be centered after the sliding
@@ -183,8 +177,9 @@ namespace CircularScrollingRoulette.Roulette
 			InitializeInputFunction();
 			InitializeEntryDependency();
 			InitCallbacks();
-			StartShift();
 			_maxNumOfDisabledEntries = rouletteEntries.Length / 2;
+
+			this.DelayAction(1f, StartShift);
 		}
 
 		protected virtual void InitHelperData()
@@ -203,8 +198,10 @@ namespace CircularScrollingRoulette.Roulette
 
 		private void StartShift()
 		{
-			SetUnitMove(numberOfEntries / 2);
-			_slidingFramesLeft = 1;
+			if (rouletteType == RouletteType.Linear)
+			{
+				SetUnitMove(numberOfEntries / 2);
+			}
 		}
 
 		private void InitCallbacks()
@@ -247,7 +244,7 @@ namespace CircularScrollingRoulette.Roulette
 		void InitializePositionVars()
 		{
 			/* The the reference of canvas plane */
-			_parentCanvas = GetComponentInParent<Canvas>();
+			ParentCanvas = GetComponentInParent<Canvas>();
 
 			/* Get the max position of canvas plane in the canvas space.
 		 * Assume that the origin of the canvas space is at the center of canvas plane. */
@@ -270,7 +267,7 @@ namespace CircularScrollingRoulette.Roulette
 
 		protected virtual Vector2 GenerateCanvasMaxPosL()
 		{
-			RectTransform rectTransform = _parentCanvas.GetComponent<RectTransform>();
+			RectTransform rectTransform = ParentCanvas.GetComponent<RectTransform>();
 			return new Vector2(rectTransform.rect.width / 2, rectTransform.rect.height / 2);
 		}
 
@@ -374,17 +371,13 @@ namespace CircularScrollingRoulette.Roulette
 		{
 			switch (state) {
 				case TouchPhase.Began:
-					_numOfInputFrames = 0;
 					_startInputPosL = ScreenToCanvasSpace(pointer.position);
-					_slidingFramesLeft = 0; // Make the roulette stop sliding
 					break;
 
 				case TouchPhase.Moved:
-					++_numOfInputFrames;
 					_deltaInputPosL = ScreenToCanvasSpace(pointer.delta);
 					// Slide the roulette as long as the moving distance of the pointer
-					_slidingDistanceLeft = _deltaInputPosL;
-					_slidingFramesLeft = 1;
+					_slidingDistanceLeft += _deltaInputPosL;
 					break;
 
 				case TouchPhase.Ended:
@@ -422,60 +415,37 @@ namespace CircularScrollingRoulette.Roulette
 		/// </summary>
 		Vector3 ScreenToCanvasSpace(Vector3 position)
 		{
-			return position / _parentCanvas.scaleFactor;
+			return position / ParentCanvas.scaleFactor;
 		}
 
 
 		/* ====== Movement functions ====== */
 		/* Control the movement of rouletteEntries
 	 */
-		void Update()
+		private void Update()
 		{
 			if(!_allEntriesInitiated) return;
 			
-			if (_slidingFramesLeft > 0)
+			if (_slidingDistanceLeft.sqrMagnitude > 0)
 			{
 				_rouletteSliding = true;
 				if (rouletteType == RouletteType.Linear) {
 					StopRouletteWhenReachEnd();
 				}
 
-				--_slidingFramesLeft;
-
-				// Set sliding distance for this frame
-				if (_slidingFramesLeft == 0) {
-					if(logLogic) Debug.Log("_slidingFramesLeft == 0");
-					if (_needToAlignToCenter) {
-						_needToAlignToCenter = false;
-						SetSlidingToCenter();
-					} else {
-						_slidingDistance = _slidingDistanceLeft;
-					}
-				}
-				else
+				var startFinishBoost = _slidingDistanceLeft.sqrMagnitude <= minSlidingDistanceSqrMagnitude && !_finishBoostActivated;
+				// Boost end of scrolling 
+				if (startFinishBoost)
 				{
-					// Boost end of scrolling 
-					if (_slidingDistanceLeft.sqrMagnitude <= minSlidingDistanceSqrMagnitude && !_finishBoostActivated)
-					{
-						_finishBoostActivated = true;
-
-						_slidingFramesLeft = (int) (_slidingFramesLeft * entrySlidingSpeedFactor / baselineSlidingFactor);
-						
-						entrySlidingSpeedFactor = baselineSlidingFactor;
-						if(logSlidingDistance) Debug.Log("Finish boost activated");
-					}
-
-					_slidingDistance = Vector3.Lerp(Vector3.zero, _slidingDistanceLeft, 
-						                   entrySlidingSpeedFactor) * (Time.deltaTime * dTMod);
-
-					if (logSlidingDistance)
-					{
-						Debug.Log(_slidingDistanceLeft.sqrMagnitude);
-						// Debug.Log($"x: {_slidingDistanceLeft.x} y: {_slidingDistanceLeft.y}");
-						// Debug.Log($"x: {_slidingDistance.x} y: {_slidingDistance.y}");
-					}
+					_finishBoostActivated = true;
+					if(logSlidingDistance) Debug.Log("Finish boost activated");
 				}
+				
+				var slideSpeed = _finishBoostActivated ? baselineSlidingFactor : entrySlidingSpeedFactor;
 
+				_slidingDistance = Vector3.Lerp(Vector3.zero, _slidingDistanceLeft, 
+					slideSpeed) * (Time.deltaTime * dTMod);
+				
 				foreach (RouletteEntry rouletteEntry in rouletteEntries)
 					rouletteEntry.UpdatePosition(_slidingDistance);
 
@@ -483,6 +453,12 @@ namespace CircularScrollingRoulette.Roulette
 			}
 			else
 			{
+				if (_needToAlignToCenter) {
+					_needToAlignToCenter = false;
+					SetSlidingToCenter();
+				} else {
+					_slidingDistance = _slidingDistanceLeft;
+				
 				// Roulette movement is finished here
 				if (_rouletteSliding)
 				{
@@ -490,17 +466,19 @@ namespace CircularScrollingRoulette.Roulette
 					_finishBoostActivated = false;
 					OnSlidingFinishedCallback?.Invoke();
 				}
+				
+				}
 			}
 		}
 	
 		/// <summary>
-		/// Calculate the sliding distance and sliding frames
+		/// Calculate the sliding distance 
 		/// </summary>
 		void SetSlidingEffect()
 		{
 			Vector3 deltaPos = _deltaInputPosL;
 			Vector3 slideDistance = _endInputPosL - _startInputPosL;
-			bool fastSliding = IsFastSliding(_numOfInputFrames, slideDistance);
+			bool fastSliding = IsFastSliding(slideDistance);
 
 			if (fastSliding)
 				deltaPos *= 5.0f;   // Slide more longer!
@@ -508,21 +486,18 @@ namespace CircularScrollingRoulette.Roulette
 			_slidingDistanceLeft = deltaPos;
 
 			if (alignMiddle) {
-				_slidingFramesLeft = fastSliding ? entrySlidingFrames >> 1 : entrySlidingFrames >> 2;
 				_needToAlignToCenter = true;
-			} else {
-				_slidingFramesLeft = fastSliding ? entrySlidingFrames * 2 : entrySlidingFrames;
-			}
+			} 
 		}
 
 		/// <summary>
 		/// Determine if the finger or mouse sliding is the fast sliding.
-		/// If the duration of a slide is within 15 frames and the distance is
+		/// If the distance is
 		/// longer than the 1/3 of the distance of the roulette, the slide is the fast sliding.
 		/// </summary>
-		bool IsFastSliding(int frames, Vector3 distance)
+		bool IsFastSliding(Vector3 distance)
 		{
-			if (frames < 15) {
+			{
 				switch (direction) {
 					case Direction.Horizontal:
 						if (Mathf.Abs(distance.x) > CanvasMaxPosL.x * 2.0f / 3.0f)
@@ -546,7 +521,6 @@ namespace CircularScrollingRoulette.Roulette
 		{
 			if(logLogic) Debug.Log("Sliding to center");
 			_slidingDistanceLeft = FindDeltaPositionToCenter();
-			_slidingFramesLeft = entrySlidingFrames;
 		}
 	
 		/// <summary>
@@ -612,11 +586,10 @@ namespace CircularScrollingRoulette.Roulette
 		{
 			Vector2 deltaPos = UnitPosL * unit;
 
-			if (_slidingFramesLeft != 0)
+			if (_slidingDistanceLeft.sqrMagnitude > 0)
 				deltaPos += (Vector2)_slidingDistanceLeft;
 
 			_slidingDistanceLeft = deltaPos;
-			_slidingFramesLeft = entrySlidingFrames;
 		}
 	
 		/// <summary>
@@ -649,8 +622,6 @@ namespace CircularScrollingRoulette.Roulette
 						Vector3 remainDistance = FindDeltaPositionToCenter();
 						_slidingDistanceLeft.y = remainDistance.y;
 
-						if (_slidingFramesLeft == 1)
-							_slidingFramesLeft = entrySlidingFrames;
 					}
 
 					break;
@@ -747,18 +718,10 @@ namespace CircularScrollingRoulette.Roulette
 		}
 
 		/// <summary>
-		/// Divide each component of vector a by vector b.
-		/// </summary>
-		private Vector3 DivideComponent(Vector3 a, Vector3 b)
-		{
-			return new Vector3(a.x / b.x, a.y / b.y, a.z / b.z);
-		}
-
-		/// <summary>
 		/// Checks if entry position can be used as an anchor for scaling
 		/// </summary>
 		/// <param name="i">entry index in array</param>
-		/// <param name="entryYPos">entry position</param>
+		/// <param name="entryPos">entry position</param>
 		public void CheckAnchor(int i, Vector2 entryPos)
 		{
 			if (i <= 1) // if it takes one of first two positions
@@ -799,6 +762,20 @@ namespace CircularScrollingRoulette.Roulette
 			if(rouletteType != RouletteType.Linear) return;
 			ContentInEntries.Remove(prevContentId);
 			ContentInEntries.Add(contentId, entry);
+		}
+	}
+	
+	public static class MonoBehaviourExt
+	{
+		public static void DelayAction(this MonoBehaviour mono, float delay, Action action)
+		{
+			mono.StartCoroutine(DelayCoroutine());
+            
+			IEnumerator DelayCoroutine()
+			{
+				yield return new WaitForSeconds(delay);
+				action?.Invoke();
+			}
 		}
 	}
 }
