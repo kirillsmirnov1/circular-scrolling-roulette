@@ -179,7 +179,7 @@ namespace CircularScrollingRoulette.Roulette
 			InitCallbacks();
 			_maxNumOfDisabledEntries = rouletteEntries.Length / 2;
 
-			this.DelayAction(1f, StartShift);
+			StartShift();
 		}
 
 		protected virtual void InitHelperData()
@@ -200,7 +200,8 @@ namespace CircularScrollingRoulette.Roulette
 		{
 			if (rouletteType == RouletteType.Linear)
 			{
-				SetUnitMove(numberOfEntries / 2);
+				SetUnitMove(numberOfEntries / 2 * (direction == Direction.Vertical ? 1 : -1));
+				// FIXME I'll need to do it without actually moving stuff, it looks and works messy 
 			}
 		}
 
@@ -428,6 +429,7 @@ namespace CircularScrollingRoulette.Roulette
 			
 			if (_slidingDistanceLeft.sqrMagnitude > 1)
 			{
+				if(logSlidingDistance) Debug.Log(_slidingDistanceLeft.sqrMagnitude);
 				
 				_rouletteSliding = true;
 				if (rouletteType == RouletteType.Linear) {
@@ -763,20 +765,6 @@ namespace CircularScrollingRoulette.Roulette
 			if(rouletteType != RouletteType.Linear) return;
 			ContentInEntries.Remove(prevContentId);
 			ContentInEntries.Add(contentId, entry);
-		}
-	}
-	
-	public static class MonoBehaviourExt
-	{
-		public static void DelayAction(this MonoBehaviour mono, float delay, Action action)
-		{
-			mono.StartCoroutine(DelayCoroutine());
-            
-			IEnumerator DelayCoroutine()
-			{
-				yield return new WaitForSeconds(delay);
-				action?.Invoke();
-			}
 		}
 	}
 }
