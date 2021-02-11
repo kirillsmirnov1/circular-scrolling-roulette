@@ -177,8 +177,6 @@ namespace CircularScrollingRoulette.Roulette
 			InitializeEntryDependency();
 			InitCallbacks();
 			_maxNumOfDisabledEntries = rouletteEntries.Length / 2;
-
-			StartShift();
 		}
 
 		protected virtual void InitHelperData()
@@ -192,15 +190,6 @@ namespace CircularScrollingRoulette.Roulette
 					: numberOfEntries; 
 				ContentInEntries = new Dictionary<int, RouletteEntry>();
 				LastContentId = rouletteBank.GetRouletteLength() - 1;
-			}
-		}
-
-		private void StartShift()
-		{
-			if (rouletteType == RouletteType.Linear)
-			{
-				SetUnitMove(numberOfEntries / 2 * (direction == Direction.Vertical ? 1 : -1));
-				// FIXME I'll need to do it without actually moving stuff, it looks and works messy 
 			}
 		}
 

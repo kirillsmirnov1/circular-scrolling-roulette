@@ -1,5 +1,4 @@
-﻿using System;
-using CircularScrollingRoulette.Bank;
+﻿using CircularScrollingRoulette.Bank;
 using CircularScrollingRoulette.Entry.Content;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,7 +18,6 @@ namespace CircularScrollingRoulette.Entry
 	
 		// These public variables will be initialized
 		// in Roulette.InitializeEntriesDependency().
-		[HideInInspector]
 		public int rouletteEntryId;   // The same as the order in the `rouletteEntries`
 		[HideInInspector]
 		public RouletteEntry lastRouletteEntry;
@@ -28,7 +26,7 @@ namespace CircularScrollingRoulette.Entry
 
 		private Roulette.Roulette _roulette;
 		protected RouletteBank _rouletteBank;
-		protected int _contentId;
+		[SerializeField] protected int contentId;
 		protected int _prevContentId = -1;
 
 		/* ====== Position variables ====== */
@@ -50,10 +48,7 @@ namespace CircularScrollingRoulette.Entry
 		/// <summary>
 		/// Get the content ID of the entry
 		/// </summary>
-		public int GetContentId()
-		{
-			return _contentId;
-		}
+		public int GetContentId() => contentId;
 
 		/* Notice: RouletteEntry will initialize its variables from Roulette.
 	 * Make sure that the execution order of script Roulette is prior to
@@ -86,7 +81,7 @@ namespace CircularScrollingRoulette.Entry
 		{
 			GetComponentInChildren<Button>()
 				?.onClick
-				.AddListener(() => _roulette.onEntryClick.Invoke(_contentId));
+				.AddListener(() => _roulette.onEntryClick.Invoke(contentId));
 		}
 
 		/// <summary>
@@ -95,32 +90,7 @@ namespace CircularScrollingRoulette.Entry
 		public void InitContent()
 		{
 			// Get the content ID of the centered entry
-			_contentId = _roulette.centeredContentId;
-
-			// Adjust the contentID according to its initial order.
-			_contentId += rouletteEntryId - _roulette.rouletteEntries.Length / 2;
-
-			// In the linear mode, disable the entry if needed
-			if (_roulette.rouletteType == Roulette.Roulette.RouletteType.Linear) {
-				// Disable the entries at the upper half of the roulette
-				// which will hold the item at the tail of the contents.
-				if (_contentId < 0) {
-					_roulette.numOfUpperDisabledEntries += 1;
-					gameObject.SetActive(false);
-				}
-				// Disable the entry at the lower half of the roulette
-				// which will hold the repeated item.
-				else if (_contentId >= _rouletteBank.GetRouletteLength()) {
-					_roulette.numOfLowerDisabledEntries += 1;
-					gameObject.SetActive(false);
-				}
-			}
-
-			// Round the content id
-			while (_contentId < 0)
-				_contentId += _rouletteBank.GetRouletteLength();
-			_contentId = _contentId % _rouletteBank.GetRouletteLength();
-
+			contentId = rouletteEntryId;
 			UpdateDisplayContent();
 		}
 	
@@ -130,9 +100,9 @@ namespace CircularScrollingRoulette.Entry
 		protected virtual void UpdateDisplayContent()
 		{
 			// Update the content according to its contentID.
-			_content.SetContent(_rouletteBank.GetRouletteContent(_contentId));
-			_roulette.EntryChangedContent(this, _prevContentId, _contentId);
-			_prevContentId = _contentId;
+			_content.SetContent(_rouletteBank.GetRouletteContent(contentId));
+			_roulette.EntryChangedContent(this, _prevContentId, contentId);
+			_prevContentId = contentId;
 		}
 
 		/* Initialize the local position of the RouletteEntry according to its ID
@@ -356,21 +326,16 @@ namespace CircularScrollingRoulette.Entry
 				                       Mathf.InverseLerp(smallest_at, 0.0f, Mathf.Abs(target_value)));
 		}
 
-		private int GetCurrentContentId()
-		{
-			return _contentId;
-		}
-	
 		/// <summary>
 		/// Update the content to the last content of the next RouletteEntry
 		/// </summary>
 		void UpdateToLastContent()
 		{
-			_contentId = nextRouletteEntry.GetCurrentContentId() - 1;
-			_contentId = (_contentId < 0) ? _rouletteBank.GetRouletteLength() - 1 : _contentId;
+			contentId = nextRouletteEntry.GetContentId() - 1;
+			contentId = (contentId < 0) ? _rouletteBank.GetRouletteLength() - 1 : contentId;
 
 			if (_roulette.rouletteType == Roulette.Roulette.RouletteType.Linear) {
-				if (_contentId == _rouletteBank.GetRouletteLength() - 1 ||
+				if (contentId == _rouletteBank.GetRouletteLength() - 1 ||
 				    !nextRouletteEntry.isActiveAndEnabled) {
 					// If the entry has been disabled at the other side,
 					// decrease the counter of the other side.
@@ -396,11 +361,11 @@ namespace CircularScrollingRoulette.Entry
 		/// </summary>
 		void UpdateToNextContent()
 		{
-			_contentId = lastRouletteEntry.GetCurrentContentId() + 1;
-			_contentId = (_contentId == _rouletteBank.GetRouletteLength()) ? 0 : _contentId;
+			contentId = lastRouletteEntry.GetContentId() + 1;
+			contentId = (contentId == _rouletteBank.GetRouletteLength()) ? 0 : contentId;
 
 			if (_roulette.rouletteType == Roulette.Roulette.RouletteType.Linear) {
-				if (_contentId == 0 || !lastRouletteEntry.isActiveAndEnabled) {
+				if (contentId == 0 || !lastRouletteEntry.isActiveAndEnabled) {
 					if (!isActiveAndEnabled)
 						--_roulette.numOfUpperDisabledEntries;
 
