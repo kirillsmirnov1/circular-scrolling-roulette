@@ -121,7 +121,7 @@ namespace CircularScrollingRoulette.Entry
 					break;
 				case Roulette.Roulette.Direction.Horizontal:
 					transform.localPosition = new Vector3(
-						_unitPos.x * (rouletteEntryId - _roulette.rouletteEntries.Length / 2) - (evenNumberOfEntries ? _unitPos.x / 2 : 0),
+						_unitPos.x * (rouletteEntryId - _roulette.rouletteEntries.Length / 2) + (evenNumberOfEntries ? _unitPos.x / 2 : 0),
 						0.0f, 0.0f);
 					UpdateYPosition();
 					break;
