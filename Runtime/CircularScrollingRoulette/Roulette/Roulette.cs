@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using CircularScrollingRoulette.Bank;
 using CircularScrollingRoulette.Entry;
@@ -236,9 +236,9 @@ namespace CircularScrollingRoulette.Roulette
 			}
 		}
 
-		protected virtual RouletteEntry InstantiateEntry(GameObject prefab, Transform t)
+		protected virtual RouletteEntry InstantiateEntry(GameObject prefab, Transform parent)
 		{
-			return Instantiate(prefab, t).GetComponent<RouletteEntry>();
+			return Instantiate(prefab, parent).GetComponent<RouletteEntry>();
 		}
 
 		void InitializePositionVars()
