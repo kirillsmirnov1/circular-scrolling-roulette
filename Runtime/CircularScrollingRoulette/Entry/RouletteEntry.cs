@@ -137,47 +137,28 @@ namespace CircularScrollingRoulette.Entry
 
 		/* Initialize the local position of the RouletteEntry according to its ID
 	 */
-		void InitialPosition()
+		private void InitialPosition()
 		{
 			// If there are even number of RouletteEntries, adjust the initial position by an half unitPos.
-			if ((_roulette.rouletteEntries.Length & 0x1) == 0) {
-				switch (_roulette.direction) {
-					case Roulette.Roulette.Direction.Vertical:
-						transform.localPosition = new Vector3(0.0f,
-							_unitPos.y * (rouletteEntryId * -1 + _roulette.rouletteEntries.Length / 2) - _unitPos.y / 2,
-							0.0f);
-						UpdateXPosition();
-						break;
-					case Roulette.Roulette.Direction.Horizontal:
-						transform.localPosition = new Vector3(
-							_unitPos.x * (rouletteEntryId - _roulette.rouletteEntries.Length / 2) - _unitPos.x / 2,
-							0.0f, 0.0f);
-						UpdateYPosition();
-						break;
-					case Roulette.Roulette.Direction.Radial:
-						InitAngularPos();
-						UpdateAngularPosition();
-						break;
-				}
-			} else {
-				switch (_roulette.direction) {
-					case Roulette.Roulette.Direction.Vertical:
-						transform.localPosition = new Vector3(0.0f,
-							_unitPos.y * (rouletteEntryId * -1 + _roulette.rouletteEntries.Length / 2),
-							0.0f);
-						UpdateXPosition();
-						break;
-					case Roulette.Roulette.Direction.Horizontal:
-						transform.localPosition = new Vector3(
-							_unitPos.x * (rouletteEntryId - _roulette.rouletteEntries.Length / 2),
-							0.0f, 0.0f);
-						UpdateYPosition();
-						break;
-					case Roulette.Roulette.Direction.Radial:
-						InitAngularPos();
-						UpdateAngularPosition();
-						break;
-				}
+			var evenNumberOfEntries = (_roulette.rouletteEntries.Length & 0x1) == 0;
+			
+			switch (_roulette.direction) {
+				case Roulette.Roulette.Direction.Vertical:
+					transform.localPosition = new Vector3(0.0f,
+						_unitPos.y * (rouletteEntryId * -1 + _roulette.rouletteEntries.Length / 2) - (evenNumberOfEntries ? _unitPos.y / 2 : 0),
+						0.0f);
+					UpdateXPosition();
+					break;
+				case Roulette.Roulette.Direction.Horizontal:
+					transform.localPosition = new Vector3(
+						_unitPos.x * (rouletteEntryId - _roulette.rouletteEntries.Length / 2) - (evenNumberOfEntries ? _unitPos.x / 2 : 0),
+						0.0f, 0.0f);
+					UpdateYPosition();
+					break;
+				case Roulette.Roulette.Direction.Radial:
+					InitAngularPos();
+					UpdateAngularPosition();
+					break;
 			}
 		}
 
