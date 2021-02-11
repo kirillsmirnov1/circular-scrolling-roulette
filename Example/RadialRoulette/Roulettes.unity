@@ -123,6 +123,45 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &10046577
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 10046578}
+  m_Layer: 5
+  m_Name: vertical
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &10046578
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 10046577}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1812001383}
+  - {fileID: 1660108077}
+  - {fileID: 1988556183}
+  - {fileID: 693646182}
+  m_Father: {fileID: 353278985}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 500, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &75197006
 GameObject:
   m_ObjectHideFlags: 0
@@ -200,7 +239,7 @@ GameObject:
   - component: {fileID: 121899637}
   - component: {fileID: 121899638}
   m_Layer: 5
-  m_Name: Roulette
+  m_Name: Roulette_linear_limited
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -213,12 +252,12 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 121899636}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_Children: []
-  m_Father: {fileID: 353278985}
-  m_RootOrder: 0
+  m_Father: {fileID: 703732333}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -245,13 +284,13 @@ MonoBehaviour:
   centeredContentId: 0
   entryPrefab: {fileID: 3076805003242875324, guid: 50e4ce4759ebbb349b504d976df92a32,
     type: 3}
-  numberOfEntries: 5
+  numberOfEntries: 20
   rouletteEntries: []
   onEntryClick:
     m_PersistentCalls:
       m_Calls: []
   controlButtons: []
-  entryGapFactor: 7
+  entryGapFactor: 5
   entrySlidingSpeedFactor: 0.05
   dTMod: 200
   rouletteCurvature: 0
@@ -365,8 +404,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
-  - {fileID: 121899637}
-  - {fileID: 651807225}
+  - {fileID: 703732333}
+  - {fileID: 10046578}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -375,6 +414,91 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!1 &377096989
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 377096990}
+  - component: {fileID: 377096991}
+  m_Layer: 5
+  m_Name: Roulette_circular_4entries
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &377096990
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 377096989}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_Children: []
+  m_Father: {fileID: 703732333}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 400}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &377096991
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 377096989}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47a7275e2dd6d454e94db4192a26173a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rouletteType: 0
+  controlMode: 4
+  alignMiddle: 1
+  direction: 1
+  rouletteBank: {fileID: 1061178529}
+  centeredContentId: 0
+  entryPrefab: {fileID: 3076805003242875324, guid: 50e4ce4759ebbb349b504d976df92a32,
+    type: 3}
+  numberOfEntries: 4
+  rouletteEntries: []
+  onEntryClick:
+    m_PersistentCalls:
+      m_Calls: []
+  controlButtons: []
+  entryGapFactor: 7
+  entrySlidingSpeedFactor: 0.05
+  dTMod: 200
+  rouletteCurvature: 0
+  positionAdjust: -0.7
+  centerEntryScaleRatio: 0.32
+  radius: 100
+  angleStart: 0
+  radPerEntry: 0
+  blockInputOnLimitedData: 0
+  numOfUpperDisabledEntries: 0
+  numOfLowerDisabledEntries: 0
+  scaleEdgeObjects: 0
+  scaleShift: 0.8
+  anchors:
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  minSlidingDistanceSqrMagnitude: 5
+  baselineSlidingFactor: 0.08
+  logLogic: 0
+  logSlidingDistance: 0
 --- !u!1 &651807224
 GameObject:
   m_ObjectHideFlags: 0
@@ -386,7 +510,7 @@ GameObject:
   - component: {fileID: 651807225}
   - component: {fileID: 651807226}
   m_Layer: 5
-  m_Name: Roulette (1)
+  m_Name: Roulette_circular_7entries
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -399,11 +523,11 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 651807224}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_Children: []
-  m_Father: {fileID: 353278985}
+  m_Father: {fileID: 703732333}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -460,6 +584,215 @@ MonoBehaviour:
   baselineSlidingFactor: 0.08
   logLogic: 0
   logSlidingDistance: 0
+--- !u!1 &675269429
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 675269430}
+  - component: {fileID: 675269431}
+  m_Layer: 5
+  m_Name: Roulette_linear_not_limited_7
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &675269430
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 675269429}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_Children: []
+  m_Father: {fileID: 703732333}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -200}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &675269431
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 675269429}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47a7275e2dd6d454e94db4192a26173a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rouletteType: 1
+  controlMode: 4
+  alignMiddle: 1
+  direction: 1
+  rouletteBank: {fileID: 1061178529}
+  centeredContentId: 0
+  entryPrefab: {fileID: 3076805003242875324, guid: 50e4ce4759ebbb349b504d976df92a32,
+    type: 3}
+  numberOfEntries: 7
+  rouletteEntries: []
+  onEntryClick:
+    m_PersistentCalls:
+      m_Calls: []
+  controlButtons: []
+  entryGapFactor: 5
+  entrySlidingSpeedFactor: 0.05
+  dTMod: 200
+  rouletteCurvature: 0
+  positionAdjust: -0.7
+  centerEntryScaleRatio: 0.32
+  radius: 100
+  angleStart: 0
+  radPerEntry: 0
+  blockInputOnLimitedData: 0
+  numOfUpperDisabledEntries: 0
+  numOfLowerDisabledEntries: 0
+  scaleEdgeObjects: 0
+  scaleShift: 0.8
+  anchors:
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  minSlidingDistanceSqrMagnitude: 5
+  baselineSlidingFactor: 0.08
+  logLogic: 0
+  logSlidingDistance: 0
+--- !u!1 &693646181
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 693646182}
+  - component: {fileID: 693646183}
+  m_Layer: 5
+  m_Name: Roulette_circular_4entries
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &693646182
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 693646181}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_Children: []
+  m_Father: {fileID: 10046578}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 400, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &693646183
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 693646181}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47a7275e2dd6d454e94db4192a26173a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rouletteType: 0
+  controlMode: 4
+  alignMiddle: 1
+  direction: 0
+  rouletteBank: {fileID: 1061178529}
+  centeredContentId: 0
+  entryPrefab: {fileID: 3076805003242875324, guid: 50e4ce4759ebbb349b504d976df92a32,
+    type: 3}
+  numberOfEntries: 4
+  rouletteEntries: []
+  onEntryClick:
+    m_PersistentCalls:
+      m_Calls: []
+  controlButtons: []
+  entryGapFactor: 3
+  entrySlidingSpeedFactor: 0.05
+  dTMod: 200
+  rouletteCurvature: 0
+  positionAdjust: -0.7
+  centerEntryScaleRatio: 0.32
+  radius: 100
+  angleStart: 0
+  radPerEntry: 0
+  blockInputOnLimitedData: 0
+  numOfUpperDisabledEntries: 0
+  numOfLowerDisabledEntries: 0
+  scaleEdgeObjects: 0
+  scaleShift: 0.8
+  anchors:
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  minSlidingDistanceSqrMagnitude: 5
+  baselineSlidingFactor: 0.08
+  logLogic: 0
+  logSlidingDistance: 0
+--- !u!1 &703732332
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 703732333}
+  m_Layer: 5
+  m_Name: horizontal
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &703732333
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 703732332}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 377096990}
+  - {fileID: 651807225}
+  - {fileID: 121899637}
+  - {fileID: 675269430}
+  m_Father: {fileID: 353278985}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -500, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &830903737
 GameObject:
   m_ObjectHideFlags: 0
@@ -586,7 +919,92 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e30a9142c21486cacdba4a09d55ee7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  data: 000000000100000002000000030000000400000005000000060000000700000008000000090000000a0000000b000000
+  data: 000000000100000002000000030000000400000005000000060000000700000008000000090000000a000000
+--- !u!1 &1660108076
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1660108077}
+  - component: {fileID: 1660108078}
+  m_Layer: 5
+  m_Name: Roulette_linear_limited
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1660108077
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1660108076}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_Children: []
+  m_Father: {fileID: 10046578}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1660108078
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1660108076}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47a7275e2dd6d454e94db4192a26173a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rouletteType: 1
+  controlMode: 4
+  alignMiddle: 1
+  direction: 0
+  rouletteBank: {fileID: 1061178529}
+  centeredContentId: 0
+  entryPrefab: {fileID: 3076805003242875324, guid: 50e4ce4759ebbb349b504d976df92a32,
+    type: 3}
+  numberOfEntries: 20
+  rouletteEntries: []
+  onEntryClick:
+    m_PersistentCalls:
+      m_Calls: []
+  controlButtons: []
+  entryGapFactor: 3
+  entrySlidingSpeedFactor: 0.05
+  dTMod: 200
+  rouletteCurvature: 0
+  positionAdjust: -0.7
+  centerEntryScaleRatio: 0.32
+  radius: 100
+  angleStart: 0
+  radPerEntry: 0
+  blockInputOnLimitedData: 0
+  numOfUpperDisabledEntries: 0
+  numOfLowerDisabledEntries: 0
+  scaleEdgeObjects: 0
+  scaleShift: 0.8
+  anchors:
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  minSlidingDistanceSqrMagnitude: 5
+  baselineSlidingFactor: 0.08
+  logLogic: 0
+  logSlidingDistance: 0
 --- !u!1 &1665351264
 GameObject:
   m_ObjectHideFlags: 0
@@ -680,6 +1098,176 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!1 &1812001382
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1812001383}
+  - component: {fileID: 1812001384}
+  m_Layer: 5
+  m_Name: Roulette_linear_not_limited_7
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1812001383
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1812001382}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_Children: []
+  m_Father: {fileID: 10046578}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -200, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1812001384
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1812001382}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47a7275e2dd6d454e94db4192a26173a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rouletteType: 1
+  controlMode: 4
+  alignMiddle: 1
+  direction: 0
+  rouletteBank: {fileID: 1061178529}
+  centeredContentId: 0
+  entryPrefab: {fileID: 3076805003242875324, guid: 50e4ce4759ebbb349b504d976df92a32,
+    type: 3}
+  numberOfEntries: 7
+  rouletteEntries: []
+  onEntryClick:
+    m_PersistentCalls:
+      m_Calls: []
+  controlButtons: []
+  entryGapFactor: 3
+  entrySlidingSpeedFactor: 0.05
+  dTMod: 200
+  rouletteCurvature: 0
+  positionAdjust: -0.7
+  centerEntryScaleRatio: 0.32
+  radius: 100
+  angleStart: 0
+  radPerEntry: 0
+  blockInputOnLimitedData: 0
+  numOfUpperDisabledEntries: 0
+  numOfLowerDisabledEntries: 0
+  scaleEdgeObjects: 0
+  scaleShift: 0.8
+  anchors:
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  minSlidingDistanceSqrMagnitude: 5
+  baselineSlidingFactor: 0.08
+  logLogic: 0
+  logSlidingDistance: 0
+--- !u!1 &1988556182
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1988556183}
+  - component: {fileID: 1988556184}
+  m_Layer: 5
+  m_Name: Roulette_circular_7entries
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1988556183
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1988556182}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_Children: []
+  m_Father: {fileID: 10046578}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 200, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1988556184
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1988556182}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47a7275e2dd6d454e94db4192a26173a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rouletteType: 0
+  controlMode: 4
+  alignMiddle: 1
+  direction: 0
+  rouletteBank: {fileID: 1061178529}
+  centeredContentId: 0
+  entryPrefab: {fileID: 3076805003242875324, guid: 50e4ce4759ebbb349b504d976df92a32,
+    type: 3}
+  numberOfEntries: 7
+  rouletteEntries: []
+  onEntryClick:
+    m_PersistentCalls:
+      m_Calls: []
+  controlButtons: []
+  entryGapFactor: 3
+  entrySlidingSpeedFactor: 0.05
+  dTMod: 200
+  rouletteCurvature: 0
+  positionAdjust: -0.7
+  centerEntryScaleRatio: 0.32
+  radius: 100
+  angleStart: 0
+  radPerEntry: 0
+  blockInputOnLimitedData: 0
+  numOfUpperDisabledEntries: 0
+  numOfLowerDisabledEntries: 0
+  scaleEdgeObjects: 0
+  scaleShift: 0.8
+  anchors:
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  minSlidingDistanceSqrMagnitude: 5
+  baselineSlidingFactor: 0.08
+  logLogic: 0
+  logSlidingDistance: 0
 --- !u!1 &2045426309
 GameObject:
   m_ObjectHideFlags: 0
